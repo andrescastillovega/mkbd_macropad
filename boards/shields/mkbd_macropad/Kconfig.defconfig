@@ -1,7 +1,24 @@
-if SHIELD_MKBD_MACROPAD
+if SHIELD_MKBD_MACROPAD_LEFT
 
 config ZMK_KEYBOARD_NAME
     default "mkbd-macropad"
+
+config ZMK_SPLIT_ROLE_CENTRAL
+    default y
+
+endif # SHIELD_MKBD_MACROPAD_LEFT
+
+if SHIELD_MKBD_MACROPAD_RIGHT
+
+config ZMK_KEYBOARD_NAME
+    default "mkbd-macropad"
+
+endif # SHIELD_MKBD_MACROPAD_RIGHT
+
+if SHIELD_MKBD_MACROPAD_LEFT || SHIELD_MKBD_MACROPAD_RIGHT
+
+config ZMK_SPLIT
+    default y
 
 if ZMK_DISPLAY
 
