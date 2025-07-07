@@ -26,9 +26,9 @@ jobs:
             zephyr/
             bootloader/
             zmk/
-          key: ${{ runner.os }}-build-${{ hashFiles('west.yml') }}
+          key: ${{ runner.os }}-zmk-${{ hashFiles('west.yml') }}-v2
           restore-keys: |
-            ${{ runner.os }}-build-
+            ${{ runner.os }}-zmk-
 
       - name: West Init
         run: west init -l .
@@ -38,6 +38,16 @@ jobs:
 
       - name: West Zephyr Export
         run: west zephyr-export
+
+      - name: Verify ZMK installation
+        run: |
+          if [ ! -d "zmk/app" ]; then
+            echo "ERROR: zmk/app directory not found after west update"
+            echo "Current directory structure:"
+            find . -maxdepth 3 -type d
+            exit 1
+          fi
+          echo "ZMK installation verified successfully"
 
       - name: Build firmware
         run: west build -s zmk/app -b nice_nano_v2 -- -DZMK_CONFIG="${GITHUB_WORKSPACE}" -DSHIELD=mkbd_macropad
