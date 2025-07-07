@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          path: config
 
       - name: Cache West modules
         uses: actions/cache@v4
@@ -26,31 +28,49 @@ jobs:
             zephyr/
             bootloader/
             zmk/
-          key: ${{ runner.os }}-zmk-${{ hashFiles('west.yml') }}-v2
+          key: ${{ runner.os }}-zmk-${{ hashFiles('config/west.yml') }}-v3
           restore-keys: |
             ${{ runner.os }}-zmk-
 
       - name: West Init
-        run: west init -l .
+        run: |
+          echo "Initializing west workspace..."
+          west init -l config
+          echo "West init completed. Checking .west directory:"
+          ls -la .west/ || echo "No .west directory found"
 
       - name: West Update
-        run: west update
+        run: |
+          echo "Running west update..."
+          west update
+          echo "West update completed. Checking downloaded modules:"
+          ls -la || echo "ls failed"
+          echo "Checking for zmk directory:"
+          ls -la zmk/ || echo "zmk directory not found"
 
       - name: West Zephyr Export
-        run: west zephyr-export
+        run: |
+          echo "Running west zephyr-export..."
+          west zephyr-export
+          echo "Zephyr export completed"
 
       - name: Verify ZMK installation
         run: |
+          echo "Verifying ZMK installation..."
           if [ ! -d "zmk/app" ]; then
             echo "ERROR: zmk/app directory not found after west update"
             echo "Current directory structure:"
             find . -maxdepth 3 -type d
+            echo "West status:"
+            west status || echo "west status failed"
+            echo "West.yml content:"
+            cat config/west.yml
             exit 1
           fi
           echo "ZMK installation verified successfully"
 
       - name: Build firmware
-        run: west build -s zmk/app -b nice_nano_v2 -- -DZMK_CONFIG="${GITHUB_WORKSPACE}" -DSHIELD=mkbd_macropad
+        run: west build -s zmk/app -b nice_nano_v2 -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config" -DSHIELD=mkbd_macropad
 
       - name: Create firmware directory
         run: mkdir -p firmware
