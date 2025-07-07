@@ -69,17 +69,23 @@ jobs:
           fi
           echo "ZMK installation verified successfully"
 
-      - name: Build firmware
-        run: west build -s zmk/app -b nice_nano_v2 -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config" -DSHIELD=mkbd_macropad
+      - name: Build left side firmware
+        run: west build -s zmk/app -b nice_nano_v2 -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config" -DSHIELD=mkbd_macropad_left
 
       - name: Create firmware directory
         run: mkdir -p firmware
 
-      - name: Copy firmware
-        run: cp build/zephyr/zmk.uf2 firmware/mkbd_macropad_nice_nano_v2.uf2
+      - name: Copy left side firmware
+        run: cp build/zephyr/zmk.uf2 firmware/mkbd_macropad_left_nice_nano_v2.uf2
+
+      - name: Build right side firmware
+        run: west build -s zmk/app -b nice_nano_v2 -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config" -DSHIELD=mkbd_macropad_right
+
+      - name: Copy right side firmware
+        run: cp build/zephyr/zmk.uf2 firmware/mkbd_macropad_right_nice_nano_v2.uf2
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
-          name: mkbd_macropad_firmware
+          name: mkbd_macropad_split_firmware
           path: firmware/

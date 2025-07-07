@@ -1,2 +1,5 @@
-config SHIELD_MKBD_MACROPAD
-    def_bool $(shields_list_contains,mkbd_macropad)
+config SHIELD_MKBD_MACROPAD_LEFT
+    def_bool $(shields_list_contains,mkbd_macropad_left)
+
+config SHIELD_MKBD_MACROPAD_RIGHT
+    def_bool $(shields_list_contains,mkbd_macropad_right)
