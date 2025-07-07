@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          path: config
 
       - name: Cache West modules
         uses: actions/cache@v4
@@ -28,12 +26,12 @@ jobs:
             zephyr/
             bootloader/
             zmk/
-          key: ${{ runner.os }}-build-${{ hashFiles('config/west.yml') }}
+          key: ${{ runner.os }}-build-${{ hashFiles('west.yml') }}
           restore-keys: |
             ${{ runner.os }}-build-
 
       - name: West Init
-        run: west init -l config
+        run: west init -l .
 
       - name: West Update
         run: west update
@@ -42,7 +40,7 @@ jobs:
         run: west zephyr-export
 
       - name: Build firmware
-        run: west build -s zmk/app -b nice_nano_v2 -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config" -DSHIELD=mkbd_macropad
+        run: west build -s zmk/app -b nice_nano_v2 -- -DZMK_CONFIG="${GITHUB_WORKSPACE}" -DSHIELD=mkbd_macropad
 
       - name: Create firmware directory
         run: mkdir -p firmware
