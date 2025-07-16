@@ -6,8 +6,10 @@
 #include <zmk/event_manager.h>
 #include <zmk/events/usb_conn_state_changed.h>
 #include <zmk/events/battery_state_changed.h>
+#include "p1_keyboard_img.h"
 
 static lv_obj_t *main_label;
+static lv_obj_t *status_image;
 static lv_timer_t *fade_timer;
 
 struct status_state {
@@ -27,12 +29,22 @@ static void update_status_display(struct status_state state) {
     
     char status_text[32];
     if (state.usb_connected) {
-        snprintf(status_text, sizeof(status_text), "Charging...");
+        // Show image when charging instead of text
+        if (status_image == NULL) {
+            status_image = lv_img_create(lv_obj_get_parent(main_label));
+            lv_img_set_src(status_image, &p1_keyboard_img);
+            lv_obj_align(status_image, LV_ALIGN_CENTER, 0, 0);
+        }
+        lv_obj_add_flag(main_label, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_clear_flag(status_image, LV_OBJ_FLAG_HIDDEN);
     } else {
         snprintf(status_text, sizeof(status_text), "Battery: %d%%", state.battery_level);
+        lv_label_set_text(main_label, status_text);
+        lv_obj_clear_flag(main_label, LV_OBJ_FLAG_HIDDEN);
+        if (status_image != NULL) {
+            lv_obj_add_flag(status_image, LV_OBJ_FLAG_HIDDEN);
+        }
     }
-    
-    lv_label_set_text(main_label, status_text);
 }
 
 static void fade_to_battery_status(lv_timer_t *timer) {
