@@ -4,14 +4,6 @@
     chosen {
         zmk,kscan = &kscan0;
         zmk,matrix_transform = &default_transform;
-        zmk,physical-layout = &mkbd_macropad_layout;
-    };
-
-    mkbd_macropad_layout: mkbd_macropad_layout {
-        compatible = "zmk,physical-layout";
-        display-name = "mkbd-macropad";
-        transform = <&default_transform>;
-        kscan = <&kscan0>;
     };
 
     default_transform: keymap_transform_0 {
