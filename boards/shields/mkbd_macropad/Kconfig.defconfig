@@ -8,13 +8,6 @@ config ZMK_SPLIT_ROLE_CENTRAL
 
 endif # SHIELD_MKBD_MACROPAD_LEFT
 
-if SHIELD_MKBD_MACROPAD_RIGHT
-
-config ZMK_KEYBOARD_NAME
-    default "mkbd-macropad"
-
-endif # SHIELD_MKBD_MACROPAD_RIGHT
-
 if SHIELD_MKBD_MACROPAD_LEFT || SHIELD_MKBD_MACROPAD_RIGHT
 
 config ZMK_SPLIT
@@ -38,10 +31,12 @@ config ZMK_SPLIT_BLE
     default y
 
 config BT_MAX_CONN
-    default 2
+    default 2 if SHIELD_MKBD_MACROPAD_LEFT
+    default 1 if SHIELD_MKBD_MACROPAD_RIGHT
 
 config BT_MAX_PAIRED
-    default 5
+    default 5 if SHIELD_MKBD_MACROPAD_LEFT
+    default 1 if SHIELD_MKBD_MACROPAD_RIGHT
 
 config BT_KEYS_OVERWRITE_OLDEST
     default y
