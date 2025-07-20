@@ -9,10 +9,16 @@
 #include <zmk/events/battery_state_changed.h>
 #include "usb_img.h"
 #include "battery_img.h"
+#if IS_ENABLED(CONFIG_ZMK_WIDGET_BATTERY_ANIM)
+#include "widgets/battery_anim.h"
+#endif
 
 LOG_MODULE_REGISTER(custom_status_screen, LOG_LEVEL_DBG);
 
 static lv_obj_t *status_image;
+#if IS_ENABLED(CONFIG_ZMK_WIDGET_BATTERY_ANIM)
+static struct zmk_widget_battery_anim battery_anim_widget;
+#endif
 
 struct status_state {
     uint8_t battery_level;
@@ -49,6 +55,13 @@ lv_obj_t *zmk_display_status_screen() {
     
     status_image = lv_img_create(screen);
     lv_obj_align(status_image, LV_ALIGN_CENTER, 0, 0);
+    
+#if IS_ENABLED(CONFIG_ZMK_WIDGET_BATTERY_ANIM)
+    // Initialize battery animation widget in top right corner with 12x4 pixel offset
+    zmk_widget_battery_anim_init(&battery_anim_widget, screen);
+    lv_obj_t *battery_anim_obj = zmk_widget_battery_anim_obj(&battery_anim_widget);
+    lv_obj_align(battery_anim_obj, LV_ALIGN_TOP_RIGHT, -12, 4);
+#endif
     
     status_screen_init();
     

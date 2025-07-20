@@ -10,3 +10,13 @@ config ZMK_TIMER_LOGGER
     help
       Enable a timer that prints "Hello World!" to console every 5 seconds.
       Useful for debugging console output functionality.
+
+config ZMK_WIDGET_BATTERY_ANIM
+    bool "Battery animation widget"
+    depends on ZMK_DISPLAY
+    select LV_USE_IMG
+    select LV_USE_TIMER
+    default y
+    help
+      Enable animated battery charging widget that cycles through
+      battery levels when USB power is connected.
