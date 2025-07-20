@@ -3,3 +3,10 @@ config SHIELD_MKBD_MACROPAD_LEFT
 
 config SHIELD_MKBD_MACROPAD_RIGHT
     def_bool $(shields_list_contains,mkbd_macropad_right)
+
+config ZMK_TIMER_LOGGER
+    bool "Enable timer-based Hello World logging"
+    default y
+    help
+      Enable a timer that prints "Hello World!" to console every 5 seconds.
+      Useful for debugging console output functionality.
