@@ -6,42 +6,12 @@ config ZMK_KEYBOARD_NAME
 config ZMK_SPLIT_ROLE_CENTRAL
     default y
 
-endif # SHIELD_MKBD_MACROPAD_LEFT
+endif 
 
 if SHIELD_MKBD_MACROPAD_LEFT || SHIELD_MKBD_MACROPAD_RIGHT
 
 config ZMK_SPLIT
     default y
-
-config ZMK_BLE
-    default y
-
-config ZMK_USB
-    default y
-
-config ZMK_BATTERY_REPORTING
-    default y
-
-config ZMK_SLEEP
-    default y
-
-if ZMK_BLE
-
-config ZMK_SPLIT_BLE
-    default y
-
-config BT_MAX_CONN
-    default 2 if SHIELD_MKBD_MACROPAD_LEFT
-    default 1 if SHIELD_MKBD_MACROPAD_RIGHT
-
-config BT_MAX_PAIRED
-    default 5 if SHIELD_MKBD_MACROPAD_LEFT
-    default 1 if SHIELD_MKBD_MACROPAD_RIGHT
-
-config BT_KEYS_OVERWRITE_OLDEST
-    default y
-
-endif # ZMK_BLE
 
 if ZMK_DISPLAY
 
