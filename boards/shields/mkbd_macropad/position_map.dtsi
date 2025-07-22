@@ -1,7 +1,0 @@
-/ {
-    layouts_mkbd_macropad_position_map: layouts_mkbd_macropad_position_map {
-        compatible = "zmk,physical-layout-position-map";
-
-        complete;
-    };
-};
