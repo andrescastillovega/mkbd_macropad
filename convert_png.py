@@ -1,26 +1,43 @@
 import sys
 import os
+import argparse
 from PIL import Image
 
 def main():
-    if len(sys.argv) < 2 or len(sys.argv) > 3:
-        print("Usage: python3 convert_png.py <image_filename> [--invert]")
-        print("Example: python3 convert_png.py P1_screen.png")
-        print("Example: python3 convert_png.py P1_screen.png --invert")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description='Convert PNG image to LVGL C array')
+    parser.add_argument('image_filename', help='Input PNG image filename')
+    parser.add_argument('--invert', action='store_true', help='Invert colors (black becomes white)')
+    parser.add_argument('--source-dir', '-s', default='.', help='Source directory (default: current directory)')
+    parser.add_argument('--dest-dir', '-d', default='.', help='Destination directory (default: current directory)')
     
-    input_filename = sys.argv[1]
-    invert_colors = len(sys.argv) == 3 and sys.argv[2] == "--invert"
+    args = parser.parse_args()
+    
+    input_filename = args.image_filename
+    invert_colors = args.invert
+    source_dir = args.source_dir
+    dest_dir = args.dest_dir
     
     # Extract base name without extension
     base_name = os.path.splitext(input_filename)[0]
     
+    # Construct full input path
+    input_path = os.path.join(source_dir, input_filename)
+    
     # Load the PNG image
     try:
-        img = Image.open(input_filename)
+        img = Image.open(input_path)
     except FileNotFoundError:
-        print(f"Error: Image file '{input_filename}' not found")
+        print(f"Error: Image file '{input_path}' not found")
         sys.exit(1)
+    
+    # Handle RGBA images properly
+    if img.mode == 'RGBA':
+        # Create a black background for RGBA images
+        background = Image.new('RGB', img.size, (0, 0, 0))
+        background.paste(img, mask=img.split()[-1])  # Use alpha channel as mask
+        img = background
+    elif img.mode != 'RGB':
+        img = img.convert('RGB')
     
     img = img.convert('1')  # Ensure 1-bit format
     width, height = img.size
@@ -40,7 +57,8 @@ def main():
                 if x < width:
                     pixel_idx = y * width + x
                     # Apply color inversion logic based on flag
-                    pixel_is_white = pixels[pixel_idx]
+                    pixel_value = pixels[pixel_idx]
+                    pixel_is_white = pixel_value > 0  # Convert to boolean
                     if invert_colors:
                         # Invert: Black pixels become white in output
                         if not pixel_is_white:
@@ -107,8 +125,8 @@ LV_IMG_DECLARE({var_name});
 """
     
     # Generate output filenames
-    c_output_filename = f"boards/shields/mkbd_macropad/{var_name}.c"
-    h_output_filename = f"boards/shields/mkbd_macropad/{var_name}.h"
+    c_output_filename = os.path.join(dest_dir, f"{var_name}.c")
+    h_output_filename = os.path.join(dest_dir, f"{var_name}.h")
     
     # Write C file
     with open(c_output_filename, 'w') as f:
@@ -119,7 +137,7 @@ LV_IMG_DECLARE({var_name});
         f.write(h_code)
     
     invert_status = " (inverted)" if invert_colors else ""
-    print(f'Generated {c_output_filename} and {h_output_filename} from {input_filename}{invert_status}')
+    print(f'Generated {c_output_filename} and {h_output_filename} from {input_path}{invert_status}')
 
 if __name__ == "__main__":
     main()
