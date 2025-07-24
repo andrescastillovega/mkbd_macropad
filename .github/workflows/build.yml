@@ -70,7 +70,7 @@ jobs:
           echo "ZMK installation verified successfully"
 
       - name: Build left side firmware
-        run: west build -s zmk/app -b nice_nano_v2 -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config" -DSHIELD=mkbd_macropad_left
+        run: west build --pristine -s zmk/app -b nice_nano_v2 -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config" -DSHIELD=mkbd_macropad_left
 
       - name: Create firmware directory
         run: mkdir -p firmware
@@ -79,7 +79,7 @@ jobs:
         run: cp build/zephyr/zmk.uf2 firmware/mkbd_macropad_left_nice_nano_v2.uf2
 
       - name: Build right side firmware
-        run: west build -s zmk/app -b nice_nano_v2 -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config" -DSHIELD=mkbd_macropad_right
+        run: west build --pristine -s zmk/app -b nice_nano_v2 -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config" -DSHIELD=mkbd_macropad_right
 
       - name: Copy right side firmware
         run: cp build/zephyr/zmk.uf2 firmware/mkbd_macropad_right_nice_nano_v2.uf2
