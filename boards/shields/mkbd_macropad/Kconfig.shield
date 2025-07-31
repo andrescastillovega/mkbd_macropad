@@ -20,3 +20,12 @@ config ZMK_WIDGET_BATTERY_ANIM
     help
       Enable animated battery charging widget that cycles through
       battery levels when USB power is connected.
+
+config ZMK_WIDGET_AREA
+    bool "Area widget for four-corner display"
+    depends on ZMK_DISPLAY
+    select LV_USE_LABEL
+    default y
+    help
+      Enable area widgets that display "S0", "S1", "S2", "S3" in
+      the four corners of the screen.

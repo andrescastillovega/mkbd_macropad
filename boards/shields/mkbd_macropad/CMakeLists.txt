@@ -1,10 +1,10 @@
 if(CONFIG_ZMK_DISPLAY)
   zephyr_library_include_directories(${CMAKE_SOURCE_DIR}/include)
-  zephyr_library_sources_ifdef(CONFIG_ZMK_DISPLAY_STATUS_SCREEN_CUSTOM custom_status_screen.c)
-  zephyr_library_sources_ifdef(CONFIG_ZMK_DISPLAY_STATUS_SCREEN_CUSTOM battery_img.c)
-  zephyr_library_sources_ifdef(CONFIG_ZMK_DISPLAY_STATUS_SCREEN_CUSTOM usb_img.c)
-  zephyr_library_sources_ifdef(CONFIG_ZMK_WIDGET_BATTERY_ANIM widgets/battery_anim.c)
-  zephyr_library_sources_ifdef(CONFIG_ZMK_WIDGET_BATTERY_ANIM battery_level_images.c)
+  zephyr_library_sources_ifdef(CONFIG_ZMK_DISPLAY_STATUS_SCREEN_CUSTOM four_areas_screen.c)
+  zephyr_library_sources_ifdef(CONFIG_ZMK_WIDGET_AREA widgets/s0_widget.c)
+  zephyr_library_sources_ifdef(CONFIG_ZMK_WIDGET_AREA widgets/s1_widget.c)
+  zephyr_library_sources_ifdef(CONFIG_ZMK_WIDGET_AREA widgets/s2_widget.c)
+  zephyr_library_sources_ifdef(CONFIG_ZMK_WIDGET_AREA widgets/s3_widget.c)
 endif()
 
 # Timer logger module

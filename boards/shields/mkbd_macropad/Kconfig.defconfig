@@ -48,6 +48,9 @@ endchoice
 config LV_USE_LABEL
     default y
 
+config ZMK_WIDGET_AREA
+    default y
+
 endif # LVGL
 
 endif
