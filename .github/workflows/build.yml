@@ -84,6 +84,12 @@ jobs:
       - name: Copy right side firmware
         run: cp build/zephyr/zmk.uf2 firmware/mkbd_macropad_right_nice_nano_v2.uf2
 
+      - name: Build settings_reset firmware
+        run: west build --pristine -s zmk/app -b nice_nano_v2 -- -DSHIELD=settings_reset
+
+      - name: Copy settings_reset firmware
+        run: cp build/zephyr/zmk.uf2 firmware/settings_reset_nice_nano_v2.uf2
+
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
